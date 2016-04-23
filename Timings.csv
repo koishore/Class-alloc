@@ -1,10 +1,11 @@
-1,Monday,9:00 am,10:30 am
-2,Monday,10:40 am,12:10 pm
-3,Monday,12:20 pm,1:50 pm
-4,Monday,2:35 pm,4:05 pm
-5,Monday,4:15 pm,5:45 pm
-6,Tuesday,9:00 am,10:30 am
-7,Tuesday,10:40 am,12:10 pm
-8,Tuesday,12:20 pm,1:50 pm
-9,Tuesday,2:35 pm,4:05 pm
-10,Tuesday,4:15 pm,5:45 pm
+Slot Number,Day,Duration
+1,Monday,9:00 am-10:30 am
+2,Monday,10:40 am-12:10 pm
+3,Monday,12:20 pm-1:50 pm
+4,Monday,2:35 pm-4:05 pm
+5,Monday,4:15 pm-5:45 pm
+6,Tuesday,9:00 am-10:30 am
+7,Tuesday,10:40 am-12:10 pm
+8,Tuesday,12:20 pm-1:50 pm
+9,Tuesday,2:35 pm-4:05 pm
+10,Tuesday,4:15 pm-5:45 pm
