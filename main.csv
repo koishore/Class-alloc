@@ -51,8 +51,8 @@ FC-009-01,Aparna Vaidik,"1, 3",50,"CT-203-01, HIS-102-01"
 FC-005-02,Majumdar,"1, 4",25,CT-202-01
 FC-001-01,M Maheshwari,"1, 3",50,POL-201-01
 ENG-201-01,Harris,"7, 9",25,"ENG-102-01, FC-005-01"
-FC-005-01,Harris,"7, 9",50,ENG-201-01
-FC-002-01,Menon,"7, 9",50,ENG-102-01
+FC-005-01,Harris,"7, 9",50,"ENG-201-01, FC-002-01"
+FC-002-01,Menon,"7, 9",50,"ENG-102-01, ENG-201-01"
 CT-001-05,Dubey,"7, 9",50,CT-001-06
 CT-001-03,Chakravarty,"7, 9",50,nil
 POL-201-01,M Maheshwari,"1, 3",25,"POL-102-01, FC-001-01"
