@@ -1,0 +1,37 @@
+Course,Professor Name,Teaching Preference,Capacity,Clashes
+A,PROF A,"1, 2, 3, 4, 5, 6",25,A1
+B,PROF B,"1, 2, 3, 4, 5, 6",25,B1
+C,PROF C,"1, 2, 3, 4, 5, 6",50,C1
+D,PROF D,"1, 2, 3, 4, 5, 6",25,D1
+E,PROF E,"1, 2, 3, 4, 5, 6",25,E1
+F,PROF F,"1, 2, 3, 4, 5, 6",50,F1
+G,PROF G,"1, 2, 3, 4, 5, 6",25,G1
+H,PROF H,"1, 2, 3, 4, 5, 6",25,H1
+I,PROF I,"1, 2, 3, 4, 5, 6",50,I1
+J,PROF J,"1, 2, 3, 4, 5, 6",25,J1
+K,PROF K,"1, 2, 3",25,S
+L,PROF L,"1, 2, 3",50,T
+M,PROF M,"1, 2, 3",25,U
+N,PROF N,"1, 2, 3",25,V
+O,PROF O,"1, 3, 5",50,W
+P,PROF P,"1, 3, 5",25,X
+Q,PROF Q,"1, 3, 5",25,Y
+R,PROF R,"1, 3, 5",50,Z
+S,PROF S,"4, 5, 6",25,K
+T,PROF T,"4, 5, 6",25,L
+U,PROF U,"4, 5, 6",50,M
+V,PROF V,"4, 5, 6",25,N
+W,PROF W,"2, 4, 6",25,O
+X,PROF X,"2, 4, 6",50,P
+Y,PROF Y,"2, 4, 6",25,Q
+Z,PROF Z,"2, 4, 6",25,R
+A1,PROF A,"1, 2, 3, 4, 5, 6",50,A
+B1,PROF B,"1, 2, 3, 4, 5, 6",25,B
+C1,PROF C,"1, 2, 3, 4, 5, 6",25,C
+D1,PROF D,"1, 2, 3, 4, 5, 6",50,D
+E1,PROF E,"1, 2, 3, 4, 5, 6",25,E
+F1,PROF F,"1, 2, 3, 4, 5, 6",25,F
+G1,PROF G,"1, 2, 3, 4, 5, 6",50,G
+H1,PROF H,"1, 2, 3, 4, 5, 6",25,H
+I1,PROF I,"1, 2, 3, 4, 5, 6",25,I
+J1,PROF J,"1, 2, 3, 4, 5, 6",50,J
