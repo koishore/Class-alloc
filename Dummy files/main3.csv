@@ -1,7 +1,7 @@
 Course,Professor Name,Teaching Preference,Capacity,Clashes
 A,PROF A,3,50,C
 B,PROF B,1,50,D
-C,PROF C,3,25,A
-D,PROF D,1,25,B
+C,PROF C,2,25,A
+D,PROF D,3,25,B
 E,PROF E,2,50,F
-F,PROF F,2,25,E
+F,PROF F,1,25,E
