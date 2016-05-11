@@ -1,3 +1,4 @@
+import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.*;
@@ -41,77 +42,84 @@ class Room{
 }
 
 public class allocator { //ROOT CLASS make it Capslock
-    public static final ArrayList<Room> ROOMS = new ArrayList<>();
-    public static final ArrayList<String> SLOTS = new ArrayList<>();
     public static final String[] FILE_HEADER_MAPPING = {"Course", "Professor Name", "Teaching Preference", "Capacity", "Clashes"};
     public static final String[] ROOM_MAPPING = {"Serial", "Classroom", "Capacity"};
-    public static final String[] SLOT_MAPPING = {"Slot Number", "Duration"};
-    public static List courseobj = new ArrayList();
+    public static final String[] SLOT_MAPPING = {"Slot Number", "Day", "Duration"}; //change this now ***********
+    public static List courseobj = new ArrayList(); // List containing all the course objects
+    public static final ArrayList<Room> ROOMS = new ArrayList<>(); // ArrayList containing all room objects
+    public static final ArrayList<String> SLOTS = new ArrayList<>();
     public static String[][] coursealloc;
 
-    public void parseFile(File file1) throws IOException, NullPointerException, IndexOutOfBoundsException {
-        CSVFormat csvFileFormat = CSVFormat.DEFAULT.withHeader(FILE_HEADER_MAPPING); // excel file first row
-        FileReader fileReader = new FileReader(file1);
-        CSVParser csvFileParser = new CSVParser(fileReader, csvFileFormat); //second argument
-        List csvRecords = csvFileParser.getRecords();
-        Course course;
 
-        //start reading the csv inputfile
-        for (int i = 1; i < csvRecords.size(); i++) { //goes through each row
-            CSVRecord record = (CSVRecord) csvRecords.get(i); //of type CSVRecord
-            course = new Course(record.get("Course"), record.get("Professor Name"), record.get("Teaching Preference"),record.get("Capacity"),record.get("Clashes")); //course object
+    /**
+     * @param coursesfile refers to the file containing course name, professor name, teaching preference, capacity, clashes
+     * @throws IOException
+     * @throws NullPointerException
+     * @throws IndexOutOfBoundsException
+     *
+     * parseFile method takes in 'coursefile' of type file as input and returns nothing. It prints out the output (coursealloc matrix)
+     */
+
+    public void parseFile(File coursesfile) throws IOException, NullPointerException, IndexOutOfBoundsException {
+
+
+        CSVFormat csvFileFormat = CSVFormat.DEFAULT.withHeader(FILE_HEADER_MAPPING); // excel file first row
+        FileReader fileReader = new FileReader(coursesfile);
+        CSVParser csvFileParser = new CSVParser(fileReader, csvFileFormat);
+        List csvRecords = csvFileParser.getRecords();
+        Course course; // making an object course of type Course
+
+        //start reading coursesfile
+        for (int i = 1; i < csvRecords.size(); i++) { //looping through each row of coursesfile
+            CSVRecord record = (CSVRecord) csvRecords.get(i);
+            // making a course object with object fields Course, Professor Name, Teaching Preference, Capacity, and Clashses
+            course = new Course(record.get("Course"), record.get("Professor Name"), record.get("Teaching Preference"),record.get("Capacity"),record.get("Clashes"));
             courseobj.add(course);
-            //System.out.println(courseobj);
-            //course
         }
 
         //calling allocate method
-        if(allocate(0)){
-            for (int i = 0; i < SLOTS.size(); i++) { //filling cells of matrix with none
+        if(allocate(0)){  // if allocate returns true (meaning that all the courses have been allocated), the below code gets executed
+            for (int i = 0; i < SLOTS.size(); i++) {
                 for (int j = 0; j < ROOMS.size(); j++) {
+
                     System.out.println(coursealloc[i][j] + " : " + SLOTS.get(i) + " : " + ROOMS.get(j).roomname);
                 }
             }
+        }else{
+            System.out.println("There is no possible allocation.");
         }
 
-
-        //printing each professor object
-        Iterator<Course> itr = courseobj.iterator();
-        while (itr.hasNext()) {
-            Course element = itr.next();
-            //System.out.println(element.course_name + " : " + element.prof_name + " : " + element.preference + " : "+ element.cap+" : "+element.clashes_course);
-        }
-    } //end of parsefile
+    } //end of parsefile method
 
 
-    public void roomToCapacity(File file2) throws IOException { //Reading File2 (ROOMS.csv)
+    public void roomToCapacity(File roomsfile) throws IOException, FileNotFoundException { //Reading File2 (ROOMS.csv)
         CSVFormat csvFileFormat = CSVFormat.DEFAULT.withHeader(ROOM_MAPPING);
-        FileReader fileReader = new FileReader(file2);
+        FileReader fileReader = new FileReader(roomsfile);
         CSVParser csvFileParser1 = new CSVParser(fileReader, csvFileFormat);
         List csvRecords = csvFileParser1.getRecords();
         for (int i = 1; i < csvRecords.size(); i++) { //goes through each row
             CSVRecord record = (CSVRecord) csvRecords.get(i); //of type CSVRecord
+            //creating a room object with fields Serial, Classroom, and Capacity
             Room room = new Room(record.get("Serial"), record.get("Classroom"), record.get("Capacity"));
+            //adding room object to ROOMS list
             ROOMS.add(room);
         }
-        Collections.shuffle(ROOMS);
-
+        //Collections.shuffle(ROOMS);
     }
 
-    public void slotsToTimings(File file3) throws IOException{
+    public void slotsToTimings(File timingsfile) throws IOException, FileNotFoundException{
         CSVFormat csvFileFormat = CSVFormat.DEFAULT.withHeader(SLOT_MAPPING);
-        FileReader fileReader = new FileReader(file3);
+        FileReader fileReader = new FileReader(timingsfile);
         CSVParser csvFileParser2 = new CSVParser(fileReader, csvFileFormat);
         List csvRecords = csvFileParser2.getRecords();
         for (int i = 1; i < csvRecords.size(); i++) { //goes through each row
             CSVRecord record = (CSVRecord) csvRecords.get(i); //of type CSVRecord
-           SLOTS.add(record.get("Duration"));
+            SLOTS.add(record.get("Day") + " " + record.get("Duration"));
         }
-
     }
 
     /**
-     * @param courseNum
+     * @param courseNum refers to course number
      * @return
      * input: courselist <Course>, state of the matrix (few cells maybe assigned and few may not be unallocated)
      * returns true when coursealloc matrix has been correctly assigned with input number of courses
@@ -123,9 +131,7 @@ public class allocator { //ROOT CLASS make it Capslock
         if (courseNum == courseobj.size())
             return true;
         Course firstcourse = (Course) courseobj.get(courseNum); //setting lastcourse to last course in the courseobj list
-        for (int currentslot : firstcourse.preference) {
-            //loops through faculty preference
-            //System.out.println(lastcourse.preference.get(preflength));
+        for (int currentslot : firstcourse.preference) { //loops through faculty preference
 
             for (int room = 0; room < ROOMS.size(); room++) { //looping through matrix
 
@@ -135,34 +141,37 @@ public class allocator { //ROOT CLASS make it Capslock
                     continue;
                 }
 
-                // 2) check if any clashing course exist in the same slot: chuck the room; go to next room
+                // 2) check if any clashing course exist in the same slot: chuck the room; go to next room //clashing courses is wrong
 
                 boolean clashes = false;
                 for (int roomcheck = 0; roomcheck < ROOMS.size(); roomcheck++) {
                     if (firstcourse.clashes_course.contains(coursealloc[currentslot - 1][roomcheck])) {
+                        //System.out.println(firstcourse.clashes_course);
                         clashes = true;
                     }
                 }
 
                 if (clashes) {
-                    continue;
+                    break;
                 }
 
                 //3) place the course in the room at that slot
 
-                coursealloc[currentslot - 1][room] = firstcourse.course_name;
-                //if(courseNum%47 == 42)
-                    //System.out.println(coursealloc[currentslot - 1][room] + " : " + SLOTS.get(currentslot-1) + " : " + ROOMS.get(room).roomname );
-                int updatedcourseobj = courseNum++;
+                coursealloc[currentslot - 1][room] = firstcourse.course_name + " : " + firstcourse.prof_name;
+                //System.out.println(firstcourse.course_name + " : "  + SLOTS.get(currentslot - 1) + " : " + (currentslot) + " : " + ROOMS.get(room).roomname);
 
-                              /*4) allocate the remaining courses
-                                   a) TRUE: return true
-                                   b) FALSE: remove the course allocated in 3. */
+                //System.out.println(coursealloc[currentslot - 1][room] + " : " + (currentslot) + " : " + ROOMS.get(room).roomname );
+                int updatedcourseobj = courseNum + 1;
+
+            /*4) allocate the remaining courses
+                 a) TRUE: return true
+                 b) FALSE: remove the course allocated in 3. */
 
                 if (allocate(updatedcourseobj)) {
                     return true;
                 } else {
-                    coursealloc[currentslot - 1][room] = null;
+                    coursealloc[currentslot - 1][room] = null; //reset allocated course
+                    //courseNum = courseNum - 1;
                 }
             }
         }
@@ -170,87 +179,21 @@ public class allocator { //ROOT CLASS make it Capslock
     }
 
 
-
-    public void allocation(String course_name, String professor_name, List<Integer> preference) throws NullPointerException {
-        String[] slots = {"Monday,9am-10:30am", "Monday,10:40-12:10pm”, ”Monday,12:20-1:50pm", "Monday,2:35 pm-4:05 pm",
-                "Monday,4:15 pm-5:45 pm", "Tuesday,9:00 am-10:30 am", "Tuesday,10:40 am-12:10 pm", "Tuesday,12:20 pm-1:50 pm",
-                "Tuesday,2:35 pm-4:05 pm", "Tuesday,4:15 pm-5:45 pm"};
-
-
-        for (int i = 1; i <= 10; i++) { //filling cells of matrix with none
-            for (int j = 1; j <= ROOMS.size(); j++) {
-                coursealloc[i - 1][j - 1] = "none";
-            }
-        }
-
-
-        for (int i = 1; i <= 10; i++) {
-            for (int j = 1; j <= ROOMS.size(); j++) {
-
-                if (course_name.contains("FC")) { //room cap should be 50(Secondary check)
-                    if (ROOMS.get(j - 1).cap == 50) {
-                        for (int x = 0; x < preference.size(); x++) {
-                            if (preference.get(x) == i) {
-                                //System.out.println(preference.get(x));
-                                if (coursealloc[i - 1][j - 1] == "none") {
-                                    coursealloc[i - 1][j - 1] = course_name;
-                                    System.out.println(coursealloc[i - 1][j - 1] + " " + professor_name + " " + slots[i - 1] + " " + ROOMS.get(j - 1).roomname);
-                                    return;
-                                } else {
-                                    for (int k = 0; k < preference.size(); k++) { //running through the same preference list
-                                        //allocating the course in the next best preference slot
-                                        if (coursealloc[k][j - 1] == "none") {
-                                            coursealloc[k][j - 1] = course_name;
-                                            System.out.println(coursealloc[k][j - 1] + " " + professor_name + " " + slots[k] + " " + ROOMS.get(j - 1).roomname);
-                                            return;
-                                        } else {
-                                            preference.remove(k);
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-                } else { //not an FC course
-                    for (int x = 0; x < preference.size(); x++) {
-                        if (preference.get(x) == i) {
-                            //System.out.println(preference.get(x) + "  " + course_name);
-                            if (coursealloc[i - 1][j - 1] == "none") {
-                                coursealloc[i - 1][j - 1] = course_name;
-                                System.out.println(coursealloc[i - 1][j - 1] + " " + professor_name + " " + slots[i - 1] + " " + ROOMS.get(j - 1).roomname);
-                                return;
-                            }
-                        } else {
-                            for (int l = 0; l < preference.size(); l++) {
-                                if (coursealloc[l][j - 1] == "none") {
-                                    coursealloc[l][j - 1] = course_name;
-                                    System.out.println(coursealloc[l][j - 1] + " " + professor_name + " " + slots[l] + " " + ROOMS.get(j - 1).roomname);
-                                    return;
-                                } else {
-                                    preference.remove(l);
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }
-    }
-
-    public static void main(String[] args) throws IOException, NullPointerException, IndexOutOfBoundsException {
-        File inputFile = new File(args[0]);
-        File inputFile1 = new File(args[1]);
-        File inputFile2 = new File(args[2]);
+    public static void main(String[] args) throws IOException, NullPointerException, IndexOutOfBoundsException, FileNotFoundException {
+        File coursesfile = new File(args[0]);
+        File roomsfile = new File(args[1]);
+        File timingsfile = new File(args[2]);
         allocator start = new allocator();
-        start.roomToCapacity(inputFile1);
-        start.slotsToTimings(inputFile2);
+        start.roomToCapacity(roomsfile);
+        start.slotsToTimings(timingsfile);
         coursealloc = new String[SLOTS.size()][ROOMS.size()]; //setting the size of the matrix and making each cell equal to "null"
+        // setting each cell of the coursealloc matrix to null
         for(int i =0; i< SLOTS.size();i++){
             for(int j=0; j<ROOMS.size();j++){
                 coursealloc[i][j] = null;
             }
         }
-        start.parseFile(inputFile);
+        start.parseFile(coursesfile);
     }
 }
 
