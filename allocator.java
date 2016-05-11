@@ -66,7 +66,13 @@ public class allocator { //ROOT CLASS make it Capslock
         }
 
         //calling allocate method
-        allocate(courseobj);
+        if(allocate(0)){
+            for (int i = 0; i < SLOTS.size(); i++) { //filling cells of matrix with none
+                for (int j = 0; j < ROOMS.size(); j++) {
+                    System.out.println(coursealloc[i][j] + " : " + SLOTS.get(i) + " : " + ROOMS.get(j).roomname);
+                }
+            }
+        }
 
 
         //printing each professor object
@@ -105,60 +111,58 @@ public class allocator { //ROOT CLASS make it Capslock
     }
 
     /**
-     * @param courseobj
+     * @param courseNum
      * @return
      * input: courselist <Course>, state of the matrix (few cells maybe assigned and few may not be unallocated)
      * returns true when coursealloc matrix has been correctly assigned with input number of courses
      * returns false: couldn't find an assignment for all input courses. If so, it leaves the state when the function was called
      */
 
-    public boolean allocate(List<Course> courseobj) {
-        if (courseobj.size() > 0){
-            for (int courseobjlength = 0; courseobjlength < courseobj.size(); courseobjlength++) {
-                Course lastcourse = courseobj.get(courseobj.size() - 1); //setting lastcourse to last course in the courseobj list
-                for (int currentslot : lastcourse.preference) {
-                    //loops through faculty preference
-                    //System.out.println(lastcourse.preference.get(preflength));
-                    for (int room = 0; room < ROOMS.size(); room++) { //looping through matrix
+    public boolean allocate(int courseNum) {
+        // base case: no courses, so can return true
+        if (courseNum == courseobj.size())
+            return true;
+        Course firstcourse = (Course) courseobj.get(courseNum); //setting lastcourse to last course in the courseobj list
+        for (int currentslot : firstcourse.preference) {
+            //loops through faculty preference
+            //System.out.println(lastcourse.preference.get(preflength));
 
-                        // 1) if the room is occupied at the current time slot or course capacity > room capacity: go to next room
+            for (int room = 0; room < ROOMS.size(); room++) { //looping through matrix
 
-                        if(coursealloc[currentslot-1][room] != null || lastcourse.cap > ROOMS.get(room).cap) {
-                              continue;
-                          }
-                        
-                        // 2) check if any clashing course exist in the same slot: chuck the room; go to next room
+                // 1) if the room is occupied at the current time slot or course capacity > room capacity: go to next room
 
-                              boolean clashes = false;
-                              for (int roomcheck = 0; roomcheck < ROOMS.size(); roomcheck++) {
-                                if(lastcourse.clashes_course.contains(coursealloc[currentslot-1][roomcheck])) {
-                                  clashes = true;
-                                }
-                              }
+                if (coursealloc[currentslot - 1][room] != null || firstcourse.cap > ROOMS.get(room).cap) {
+                    continue;
+                }
 
-                              if (clashes) {
-                                  continue;
-                              }
+                // 2) check if any clashing course exist in the same slot: chuck the room; go to next room
 
-                              //3) place the course in the room at that slot
+                boolean clashes = false;
+                for (int roomcheck = 0; roomcheck < ROOMS.size(); roomcheck++) {
+                    if (firstcourse.clashes_course.contains(coursealloc[currentslot - 1][roomcheck])) {
+                        clashes = true;
+                    }
+                }
 
-                              coursealloc[currentslot-1][room] = lastcourse.course_name;
-                              List<Course> updatedcourseobj = courseobj.subList(0, courseobj.size() - 1);
-                              allocate(updatedcourseobj);
-                              //System.out.println (coursealloc[currentslot-1][room]);
+                if (clashes) {
+                    continue;
+                }
+
+                //3) place the course in the room at that slot
+
+                coursealloc[currentslot - 1][room] = firstcourse.course_name;
+                //if(courseNum%47 == 42)
+                    //System.out.println(coursealloc[currentslot - 1][room] + " : " + SLOTS.get(currentslot-1) + " : " + ROOMS.get(room).roomname );
+                int updatedcourseobj = courseNum++;
 
                               /*4) allocate the remaining courses
                                    a) TRUE: return true
                                    b) FALSE: remove the course allocated in 3. */
 
-                              if (allocate(updatedcourseobj)) {
-                                  return true;
-                              }
-
-                              else {
-                                  coursealloc[currentslot-1][room] = null;
-                              }
-                    }
+                if (allocate(updatedcourseobj)) {
+                    return true;
+                } else {
+                    coursealloc[currentslot - 1][room] = null;
                 }
             }
         }
@@ -247,7 +251,6 @@ public class allocator { //ROOT CLASS make it Capslock
             }
         }
         start.parseFile(inputFile);
-
     }
 }
 
