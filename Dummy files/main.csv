@@ -1,0 +1,13 @@
+Course,Professor Name,Teaching Preference,Capacity,Clashes
+A,PROF A,"2,3,4",50,"F, J"
+B,PROF B,"2,3,4",25,"H, K, G"
+C,PROF C,"1,2,4",25,"G, L"
+D,PROF D,"1,2",50,"F, I"
+E,PROF E,"1,4",25,I
+F,PROF A,"2,3,4",25,"A, F, H"
+G,PROF C,"1,2,4",25,"C, B"
+H,PROF B,"2,3,4",50,"B, F"
+I,PROF E,"1,4",25,"E, D"
+J,PROF X,"2,3",50,"L, A"
+K,PROF J,"1,2,3,4",25,B
+L,PROF X,"2,3",25,"J, C"
