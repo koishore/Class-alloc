@@ -1,7 +1,3 @@
-/*
- * Authors: Koishore, Mihika, Vijay
- */
-
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
@@ -18,8 +14,7 @@ class Course{
     public List<Integer> preference;
     public int cap;
     public List<String> clashes_course;
-
-    public Course(String coursename, String professor_name, String teaching_preference, String capacity, String clash) { //course constructor
+    public Course(String coursename, String professor_name, String teaching_preference, String capacity, String clash){ //course constructor
         course_name = coursename.toUpperCase();
         prof_name = professor_name;
         cap = Integer.parseInt(capacity);
@@ -27,13 +22,13 @@ class Course{
         clashes_course = new ArrayList();
         for (String s : teaching_preference.split(", ")) {
             preference.add(Integer.parseInt(s));
-        }
+            }
         Collections.shuffle(preference);
-        for (String str : clash.split(",")) {
+        for (String str : clash.split(",") ){
             clashes_course.add(str.toUpperCase());
+            }
         }
     }
-}
 
 class Room{
     public int ser;
@@ -49,7 +44,7 @@ class Room{
 public class allocator { //ROOT CLASS make it Capslock
     public static final String[] FILE_HEADER_MAPPING = {"Course", "Professor Name", "Teaching Preference", "Capacity", "Clashes"};
     public static final String[] ROOM_MAPPING = {"Serial", "Classroom", "Capacity"};
-    public static final String[] SLOT_MAPPING = {"Slot Number", "Day", "Duration"};
+    public static final String[] SLOT_MAPPING = {"Slot Number", "Day", "Duration"}; //change this now ***********
     public static List courseobj = new ArrayList(); // List containing all the course objects
     public static final ArrayList<Room> ROOMS = new ArrayList<>(); // ArrayList containing all room objects
     public static final ArrayList<String> SLOTS = new ArrayList<>();
@@ -80,11 +75,7 @@ public class allocator { //ROOT CLASS make it Capslock
             // making a course object with object fields Course, Professor Name, Teaching Preference, Capacity, and Clashses
             course = new Course(record.get("Course"), record.get("Professor Name"), record.get("Teaching Preference"),record.get("Capacity"),record.get("Clashes"));
             courseobj.add(course);
-
-            Collections.sort(courseobj, (o1, o2) -> o1.);
         }
-        //sorting the courseobj list in ascending order in order to increase the performance of the algorithm
-
 
         //calling allocate method
         if(allocate(0)){  // if allocate returns true (meaning that all the courses have been allocated), the below code gets executed
