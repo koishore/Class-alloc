@@ -8,7 +8,7 @@ import org.apache.commons.csv.CSVParser;
 import org.apache.commons.csv.CSVRecord;
 import java.lang.String;
 
-class Course {
+class Course implements Comparable<Course>{
     
     public String course_name;
     public String prof_name;
@@ -28,12 +28,18 @@ class Course {
             preference.add(Integer.parseInt(s));
         }
         
-        Collections.shuffle(preference);
+        Collections.shuffle(preference); //shuffling the preference list
         
         for (String str : clash.split(",")) {
             
             clashes_course.add(str.toUpperCase());
         }
+    }
+
+    //compareTo method sorts the Course objects based on the size of preference list
+     @Override
+    public int compareTo(Course o) {
+        return preference.size() - o.preference.size();
     }
 }
 
@@ -58,7 +64,7 @@ public class Allocator {
     public static List courseobj = new ArrayList(); // List containing all the course objects
     public static final ArrayList<Room> ROOMS = new ArrayList<>(); // ArrayList containing all room objects
     public static final ArrayList<String> SLOTS = new ArrayList<>();
-    public static String[][] coursealloc;
+    public static String[][] coursealloc; //matrix containing allocated courses
 
 
     /**
@@ -67,14 +73,14 @@ public class Allocator {
      * @throws NullPointerException
      * @throws IndexOutOfBoundsException
      *
-     * parseFile method takes in 'coursefile' of type file as input and returns nothing. It prints out the output (coursealloc matrix)
+     * parseFileAndPrintOutput method takes in 'coursefile' of type file as input and returns nothing. It prints out the output (coursealloc matrix)
      */
 
-    public void parseFile(File coursesfile) throws IOException, NullPointerException, IndexOutOfBoundsException {
+    public void parseFileAndPrintOutput(File coursesfile) throws IOException, NullPointerException, IndexOutOfBoundsException {
 
 
         CSVFormat csvFileFormat = CSVFormat.DEFAULT.withHeader(FILE_HEADER_MAPPING); // excel file first row
-        FileReader fileReader = new FileReader(coursesfile);
+        FileReader fileReader = new FileReader(coursesfile); //starting a new FileReader
         CSVParser csvFileParser = new CSVParser(fileReader, csvFileFormat);
         List csvRecords = csvFileParser.getRecords();
         Course course; // making an object course of type Course
@@ -87,19 +93,21 @@ public class Allocator {
             courseobj.add(course);
         }
 
+        //sorting the courseobj list in ascending order in order to increase the performance of the algorithm
+        Collections.sort(courseobj);
+
         //calling allocate method
         if (allocate(0)) {  // if allocate returns true (meaning that all the courses have been allocated), the below code gets executed
             for (int i = 0; i < SLOTS.size(); i++) {
                 for (int j = 0; j < ROOMS.size(); j++) {
-
-                    System.out.println(coursealloc[i][j] + " : " + SLOTS.get(i) + " : " + ROOMS.get(j).roomname);
+                    System.out.println(coursealloc[i][j] + " : " + SLOTS.get(i) + " : " + ROOMS.get(j).roomname); //prints out output in order <coursename : slot : roomname>
                 }
             }
         }else{
             System.out.println("There is no possible allocation.");
         }
 
-    } //end of parsefile method
+    } //end of parseFileAndPrintOutput method
 
 
     public void roomToCapacity(File roomsfile) throws IOException, FileNotFoundException { //Reading File2 (ROOMS.csv)
@@ -126,7 +134,6 @@ public class Allocator {
         List csvRecords = csvFileParser2.getRecords();
         
         for (int i = 1; i < csvRecords.size(); i++) { //goes through each row
-            
             CSVRecord record = (CSVRecord) csvRecords.get(i); //of type CSVRecord
             SLOTS.add(record.get("Day") + " " + record.get("Duration"));
         }
@@ -208,9 +215,10 @@ public class Allocator {
         File timingsfile = new File(args[2]);
         Allocator start = new Allocator();
         
-        start.roomToCapacity(roomsfile);
-        start.slotsToTimings(timingsfile);
-        coursealloc = new String[SLOTS.size()][ROOMS.size()]; //setting the size of the matrix and making each cell equal to "null"
+        start.roomToCapacity(roomsfile); //setting up ROOMS ArrayList
+        start.slotsToTimings(timingsfile); //setting up SLOTS ArrayList
+        coursealloc = new String[SLOTS.size()][ROOMS.size()]; //setting the size of the matrix
+
         // setting each cell of the coursealloc matrix to null
         
         for (int i = 0; i < SLOTS.size();i++) {
@@ -221,7 +229,7 @@ public class Allocator {
             }
         }
         
-        start.parseFile(coursesfile);
+        start.parseFileAndPrintOutput(coursesfile);
     }
 }
 
