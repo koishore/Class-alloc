@@ -8,7 +8,7 @@ import org.apache.commons.csv.CSVParser;
 import org.apache.commons.csv.CSVRecord;
 import java.lang.String;
 
-class Course implements Comparable<Course>{
+class Course implements Comparable<Course> {
     
     public String course_name;
     public String prof_name;
@@ -39,6 +39,7 @@ class Course implements Comparable<Course>{
     //compareTo method sorts the Course objects based on the size of preference list
      @Override
     public int compareTo(Course o) {
+        
         return preference.size() - o.preference.size();
     }
 }
@@ -87,6 +88,7 @@ public class Allocator {
 
         //start reading coursesfile
         for (int i = 1; i < csvRecords.size(); i++) { //looping through each row of coursesfile
+            
             CSVRecord record = (CSVRecord) csvRecords.get(i);
             // making a course object with object fields Course, Professor Name, Teaching Preference, Capacity, and Clashses
             course = new Course(record.get("Course"), record.get("Professor Name"), record.get("Teaching Preference"),record.get("Capacity"),record.get("Clashes"));
@@ -98,12 +100,18 @@ public class Allocator {
 
         //calling allocate method
         if (allocate(0)) {  // if allocate returns true (meaning that all the courses have been allocated), the below code gets executed
+            
             for (int i = 0; i < SLOTS.size(); i++) {
+                
                 for (int j = 0; j < ROOMS.size(); j++) {
+                    
                     System.out.println(coursealloc[i][j] + " : " + SLOTS.get(i) + " : " + ROOMS.get(j).roomname); //prints out output in order <coursename : slot : roomname>
                 }
             }
-        }else{
+        }
+        
+        else {
+            
             System.out.println("There is no possible allocation.");
         }
 
@@ -118,6 +126,7 @@ public class Allocator {
         List csvRecords = csvFileParser1.getRecords();
         
         for (int i = 1; i < csvRecords.size(); i++) { //goes through each row
+            
             CSVRecord record = (CSVRecord) csvRecords.get(i); //of type CSVRecord
             //creating a room object with fields Serial, Classroom, and Capacity
             Room room = new Room(record.get("Serial"), record.get("Classroom"), record.get("Capacity"));
@@ -134,6 +143,7 @@ public class Allocator {
         List csvRecords = csvFileParser2.getRecords();
         
         for (int i = 1; i < csvRecords.size(); i++) { //goes through each row
+            
             CSVRecord record = (CSVRecord) csvRecords.get(i); //of type CSVRecord
             SLOTS.add(record.get("Day") + " " + record.get("Duration"));
         }
