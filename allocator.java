@@ -28,7 +28,7 @@ class Course implements Comparable<Course> {
             preference.add(Integer.parseInt(s));
         }
         
-        Collections.shuffle(preference); //shuffling the preference list
+        //Collections.shuffle(preference); //shuffling the preference list
         
         for (String str : clash.split(",")) {
             
