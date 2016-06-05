@@ -5,7 +5,7 @@ Made for Scalable Software Systems (CS-205) Project at Ashoka University.
 
 ## Language(s) Used
 
--Java
+- Java
 
 ## Authors
 
